@@ -1,0 +1,52 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: pricing-ns
+  labels:
+    name: pricing
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prices-api-deployment
+  namespace: pricing-ns
+  labels:
+    app: prices-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prices-api
+  template:
+    metadata:
+      labels:
+        app: prices-api
+    spec:
+      containers:
+        - name: prices-api
+          image: rahulrai/prices-api:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prices-api-service
+  namespace: pricing-ns
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: prices-api
+---
+

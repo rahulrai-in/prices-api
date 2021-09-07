@@ -1,0 +1,29 @@
+image:
+  repository: kong/kong-gateway
+  tag: 2.4.1.1-alpine
+
+secretVolumes:
+  - kong-cluster-cert
+  - kong-cluster-ca
+
+admin:
+  enabled: false
+
+env:
+  role: data_plane
+  database: "off"
+  anonymous_reports: off
+  vitals_ttl_days: 732
+  cluster_mtls: pki
+  cluster_control_plane: kong-cpoutlet-tcblabsf20e91.cp.konnect.konghq.com:443
+  cluster_server_name: kong-cpoutlet-tcblabsf20e91.cp.konnect.konghq.com
+  cluster_telemetry_endpoint: kong-telemetry-tcblabsf20e91.tp.konnect.konghq.com:443
+  cluster_telemetry_server_name: kong-telemetry-tcblabsf20e91.tp.konnect.konghq.com
+  cluster_ca_cert: /etc/secrets/kong-cluster-ca/ca.crt
+  cluster_cert: /etc/secrets/kong-cluster-cert/tls.crt
+  cluster_cert_key: /etc/secrets/kong-cluster-cert/tls.key
+  lua_ssl_trusted_certificate: /etc/secrets/kong-cluster-ca/ca.crt
+
+ingressController:
+  enabled: false
+  installCRDs: false
